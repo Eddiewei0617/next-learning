@@ -22,7 +22,6 @@ export default function Layout({ children, home, allPostsData }: Props) {
 
   return (
     <div className={styles.container}>
-      {children}
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta
@@ -81,6 +80,7 @@ export default function Layout({ children, home, allPostsData }: Props) {
           </Link>
         </div>
       )}
+      {children}
     </div>
   );
 }

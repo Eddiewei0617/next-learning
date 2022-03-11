@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 // console.log("postsDirectory==>", postsDirectory); // D:\freshman-project\posts
@@ -63,7 +65,6 @@ export function getSortedPostsData() {
 // 製造一個id path ------------------------------------------
 export function getAllPostIds() {
   const fileNames = fs.readdirSync(postsDirectory);
-  // console.log("fileNames==>", fileNames);
   // Returns an array that looks like this:
   // [
   //   {
@@ -78,6 +79,9 @@ export function getAllPostIds() {
   //   }
   // ]
   return fileNames.map((fileName) => {
+    // console.log("fileName==>", fileName);
+    /* fileName==> pre-rendering.md
+       fileName==> ssg-ssr.md */
     return {
       params: {
         id: fileName.replace(/\.md$/, ""),
@@ -88,16 +92,24 @@ export function getAllPostIds() {
 
 // Important: The returned list is not just an array of strings — it must be an array of objects that look like the comment above. Each object must have the params key and contain an object with the id key (because we’re using [id] in the file name). Otherwise, getStaticPaths will fail.
 
-export function getPostData(id) {
+// 做一個以id為根據的json格式丟給需要的頁面
+export async function getPostData(id: string) {
   const fullPath = path.join(postsDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
 
   // Use gray-matter to parse the post metadata section
   const matterResult = matter(fileContents);
 
+  // Use remark to convert markdown into HTML string
+  const processedContent = await remark()
+    .use(html)
+    .process(matterResult.content);
+  const contentHtml = processedContent.toString();
+
   // Combine the data with the id
   return {
     id,
+    contentHtml,
     ...matterResult.data,
   };
 }
