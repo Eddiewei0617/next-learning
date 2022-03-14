@@ -18,6 +18,7 @@ export const getStaticProps: GetStaticProps = async ({ params }: Props) => {
   };
 };
 
+// 用於在使用動態路由時生成靜態文件。
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getAllPostIds();
   // console.log("paths==>", paths); // [ { params: { id: 'pre-rendering' } }, { params: { id: 'ssg-ssr' } } ]
