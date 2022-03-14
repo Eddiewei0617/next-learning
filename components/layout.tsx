@@ -1,9 +1,8 @@
 import styles from "./layout.module.css";
-import utilStyles from "../styles/utils.module.css";
+import utilStyles from "../styles/utils.module.scss";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { Children } from "react";
 
 const name = "Eddie Wei";
 // siteTitle在index會用到，所以export
@@ -11,8 +10,12 @@ export const siteTitle = "Next.tsx Sample Website";
 
 interface Props {
   children: React.ReactNode;
-  home: any;
-  allPostsData?: object[];
+  home?: boolean;
+  allPostsData?: {
+    date: string;
+    title: string;
+    id: string;
+  };
 }
 
 export default function Layout({ children, home, allPostsData }: Props) {
@@ -40,15 +43,19 @@ export default function Layout({ children, home, allPostsData }: Props) {
       <header className={styles.header}>
         {home ? (
           <>
-            <Image
-              priority
-              src="/images/profile.jpg"
-              className={utilStyles.borderCircle}
-              height={144}
-              width={144}
-              alt={name}
-            />
-            <h1 className={utilStyles.heading2X1}>{name}</h1>
+            <Link href="/">
+              <a>
+                <Image
+                  priority
+                  src="/images/profile.jpg"
+                  className={utilStyles.borderCircle}
+                  height={144}
+                  width={144}
+                  alt={name}
+                />
+                <h1 className={utilStyles.heading2X1}>{name}</h1>
+              </a>
+            </Link>
           </>
         ) : (
           <>

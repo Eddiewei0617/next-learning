@@ -12,7 +12,7 @@ export function getSortedPostsData() {
   const fileNames = fs.readdirSync(postsDirectory); // 讀到資料夾裡的所有檔名，以陣列方式回傳
   // console.log("fileNames==>", fileNames); //  [ 'pre-rendering.md', 'ssg-ssr.md' ]
 
-  const allPostsData: { [key: string]: any }[] = fileNames.map((fileName) => {
+  const allPostsData = fileNames.map((fileName) => {
     // Remove ".md" from file name to get id
     const id = fileName.replace(/\.md$/, "");
     // console.log("id==>", id); // id==> pre-rendering  // id==> ssg-ssr
@@ -30,7 +30,7 @@ export function getSortedPostsData() {
     // Combine the data with the id
     return {
       id,
-      ...matterResult.data,
+      ...(matterResult.data as { date: string; title: string }),
     };
   });
 
@@ -110,6 +110,6 @@ export async function getPostData(id: string) {
   return {
     id,
     contentHtml,
-    ...matterResult.data,
+    ...(matterResult.data as { date: string; title: string }),
   };
 }

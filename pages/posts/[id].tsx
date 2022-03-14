@@ -1,29 +1,37 @@
 import Head from "next/head";
+import { GetStaticPaths, GetStaticProps } from "next";
 import Layout from "../../components/layout";
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import Date from "../../components/date";
 
-import utilStyles from "../../styles/utils.module.css";
+import utilStyles from "../../styles/utils.module.scss";
 
-export async function getStaticProps({ params }) {
+interface Props {
+  params?: any;
+}
+export const getStaticProps: GetStaticProps = async ({ params }: Props) => {
   const postData = await getPostData(params.id);
   return {
     props: {
       postData,
     },
   };
-}
+};
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getAllPostIds();
   // console.log("paths==>", paths); // [ { params: { id: 'pre-rendering' } }, { params: { id: 'ssg-ssr' } } ]
   return {
     paths,
     fallback: false,
   };
-}
+};
 
-export default function Post({ postData }) {
+export default function Post({
+  postData,
+}: {
+  postData: { title: string; date: string; contentHtml: string };
+}) {
   return (
     <Layout home>
       <Head>
@@ -31,8 +39,6 @@ export default function Post({ postData }) {
       </Head>
       <article>
         <h1 className={utilStyles.headingX1}>{postData.title}</h1>
-        <br />
-        {postData.id}
         <br />
         <div className={utilStyles.lightText}>
           <Date dateString={postData.date} />
